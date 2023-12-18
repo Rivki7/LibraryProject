@@ -12,7 +12,7 @@ namespace LibraryProject.Controllers
 
         public EventsController(IEventService eventService)
         {
-            _eventService= eventService;
+            _eventService = eventService;
         }
 
         [HttpGet]
@@ -21,5 +21,26 @@ namespace LibraryProject.Controllers
         {
             return _eventService.GetAllEvents();
         }
+        [HttpGet]
+        [Route("getEventById/{id}")]
+        public EventDTO GetEventById(int id)
+        {
+            return _eventService.GetEventById(id);
+        }
+        [HttpGet]
+        [Route("getEventByMonth/{month}")]
+        public IEnumerable<EventDTO> GetEventByMonth(int month)
+        {
+            return _eventService.GetEventsByMonth(month);
+        }
+        
+        [HttpPost]
+        [Route("addEvent")]
+        public void AddEvent([FromBody]EventDTO newEventDTO)
+        {
+            _eventService.AddEvent(newEventDTO); 
+        }
+
+      
     }
 }

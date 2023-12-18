@@ -30,7 +30,6 @@ namespace LibraryProjectRepository
 
                 _libraryContext.SaveChanges();
             }
-            // Handle the case where the opening hour with the given ID is not found.
         }
 
         

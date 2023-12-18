@@ -60,6 +60,5 @@ namespace LibraryProjectRepository
             // Handle the case where the event with the given ID is not found.
         }
 
-        // Add other methods for updating, deleting, or querying Events
     }
 }
