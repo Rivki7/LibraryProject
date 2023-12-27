@@ -4,11 +4,11 @@ namespace LibraryProjectRepository
 {
     public interface IEventRepository
     {
-        List<Event> GetAllEvents();
-        Event GetEventById(int id);
-        IEnumerable<Event> GetEventsByMonth(int month);
-        void AddEvent(Event newEvent);
-        public void UpdateEvent(Event updatedEvent);
-        void DeleteEvent(int id);
+        Task<List<Event>> GetAllEvents();
+        Task<Event> GetEventById(int id);
+        Task<List<Event>> GetEventsByMonth(int month);
+        Task<Event> AddEvent(Event newEvent);
+        Task<Event> UpdateEvent(Event updatedEvent);
+        Task<bool> DeleteEvent(int id);
     }
 }

@@ -1,7 +1,9 @@
 using AutoMapper;
 using Entities;
+using LibraryProject.DAL.Models;
 using LibraryProjectRepository;
 using LibraryProjectService;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,7 +15,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(typeof(AutoMapping));
 builder.Services.AddScoped<IEventRepository, EventRepository>();
-builder.Services.AddScoped<IEventService, EventService>(); 
+builder.Services.AddScoped<IEventService, EventService>();
+builder.Services.AddDbContext<LibraryContext>(options =>
+         options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 var app = builder.Build();
 

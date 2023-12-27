@@ -5,10 +5,13 @@ namespace LibraryProjectService
 {
     public interface IEventService
     {
-        public List<EventDTO> GetAllEvents();
-        public EventDTO GetEventById(int id);
-        public IEnumerable<EventDTO> GetEventsByMonth(int month);
+         Task<List<EventDTO>> GetAllEvents();
+         Task<EventDTO> GetEventById(int id);
+         Task<List<EventDTO>> GetEventsByMonth(int month);
 
-        public void AddEvent(EventDTO newEventDTO); 
+        Task<EventDTO> AddEvent(EventDTO newEventDTO);
+
+        Task<EventDTO> UpdateEvent(EventDTO updatedEvent);
+        Task<bool> DeleteEvent(int id);
     }
 }
