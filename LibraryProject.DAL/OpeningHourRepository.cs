@@ -1,4 +1,5 @@
 ﻿using LibraryProject.DAL.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,32 +8,60 @@ using System.Threading.Tasks;
 
 namespace LibraryProjectRepository
 {
-    internal class OpeningHourRepository
+    public class OpeningHourRepository : IOpeningHourRepository
     {
-        private readonly LibraryContext _libraryContext = new LibraryContext();
+        private readonly LibraryContext _libraryContext;
 
-        public IEnumerable<OpeningHour> GetAllOpeningHours()
+        public OpeningHourRepository(LibraryContext libraryContext)
         {
-            return _libraryContext.OpeningHours.ToList();
+            _libraryContext = libraryContext;
         }
 
-        public void UpdateOpeningHour(OpeningHour openingHour)
+        public async Task<List<OpeningHour>> GetAllOpeningHours()
         {
-            var existingOpeningHour = _libraryContext.OpeningHours.Find(openingHour.Id);
-
-            if (existingOpeningHour != null)
+            try
             {
-                existingOpeningHour.Day = openingHour.Day;
-                existingOpeningHour.OpeningHour1 = openingHour.OpeningHour1;
-                existingOpeningHour.ClosingHour1 = openingHour.ClosingHour1;
-                existingOpeningHour.OpeningHour2 = openingHour.OpeningHour2;
-                existingOpeningHour.ClosingHour2 = openingHour.ClosingHour2;
+                List < OpeningHour > openingHours= await _libraryContext.OpeningHours.ToListAsync();
+               if(openingHours != null ) {
+                    return openingHours; 
+                }
+                throw new Exception("Opening Hours not found!"); 
+            }
+            catch (Exception ex)
+            {
+                await Console.Out.WriteLineAsync(ex.Message + "Error in Opening Hours Repository");
 
-                _libraryContext.SaveChanges();
+                return null;
             }
         }
 
-        
+        public async Task<OpeningHour> UpdateOpeningHour(OpeningHour openingHour)
+        {
+            try
+            {
+                var existingOpeningHour = await _libraryContext.OpeningHours.FindAsync(openingHour.Id);
+
+                if (existingOpeningHour != null)
+                {
+                    existingOpeningHour.Day = openingHour.Day;
+                    existingOpeningHour.OpeningHour1 = openingHour.OpeningHour1;
+                    existingOpeningHour.ClosingHour1 = openingHour.ClosingHour1;
+                    existingOpeningHour.OpeningHour2 = openingHour.OpeningHour2;
+                    existingOpeningHour.ClosingHour2 = openingHour.ClosingHour2;
+
+                    _libraryContext.SaveChangesAsync();
+                }
+                return await _libraryContext.OpeningHours.FindAsync(openingHour.Id);
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+
+        }
+
+
+
 
     }
 }

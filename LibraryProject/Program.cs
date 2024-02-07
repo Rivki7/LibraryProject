@@ -16,6 +16,15 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(typeof(AutoMapping));
 builder.Services.AddScoped<IEventRepository, EventRepository>();
 builder.Services.AddScoped<IEventService, EventService>();
+builder.Services.AddScoped<IOpeningHourRepository, OpeningHourRepository>();
+builder.Services.AddScoped<IOpeningHourService, OpeningHourService>();
+builder.Services.AddScoped<ITitleRepository, TitleRepository>();
+builder.Services.AddScoped<ITitleService, TitleService>();
+builder.Services.AddScoped<IBooksArchiveRepository, BooksArchiveRepository>();
+builder.Services.AddScoped<IBooksArchiveService, BooksArchiveService>();
+
+
+
 builder.Services.AddDbContext<LibraryContext>(options =>
          options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 

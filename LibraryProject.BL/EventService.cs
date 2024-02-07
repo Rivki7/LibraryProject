@@ -26,10 +26,16 @@ namespace LibraryProjectService
             try
             {
                 List<Event> events = await _eventRepository.GetAllEvents();
-                List<EventDTO> eventsDTO = _mapper.Map<List<EventDTO>>(events);
-                return eventsDTO;
+                if(events != null && events.Any())
+                {
+                    List<EventDTO> eventsDTO = _mapper.Map<List<EventDTO>>(events);
+                    return eventsDTO;
+                }
+                throw new Exception("No events found!"); 
+                
             }catch (Exception ex)
             {
+                await Console.Out.WriteLineAsync( ex.Message +" Error in event service");
                 return null; 
             }
            
@@ -37,20 +43,45 @@ namespace LibraryProjectService
 
         public async Task<EventDTO> GetEventById(int id)
         {
-            Event eventEntity = await _eventRepository.GetEventById(id);
+            try
+            {
+                Event eventEntity = await _eventRepository.GetEventById(id);
 
-            EventDTO eventDto = _mapper.Map<EventDTO>(eventEntity);
-
-            return eventDto;
+                if (eventEntity != null)
+                {
+                    EventDTO eventDto = _mapper.Map<EventDTO>(eventEntity);
+                    return eventDto;
+                }
+                throw new Exception("No event found with this id");
+                
+            }
+            catch (Exception ex)
+            {
+                await Console.Out.WriteLineAsync(ex.Message + " Error in event service");
+                return null;
+            }
         }
+
 
         public async Task<List<EventDTO>> GetEventsByMonth(int month)
         {
-            List<Event> eventEntities = await _eventRepository.GetEventsByMonth(month);
+            try
+            {
+                List<Event> eventEntities = await _eventRepository.GetEventsByMonth(month);
 
-            List<EventDTO> eventDtos = _mapper.Map<List<EventDTO>>(eventEntities);
-
-            return eventDtos;
+                if (eventEntities != null && eventEntities.Any())
+                {
+                    List<EventDTO> eventDtos = _mapper.Map<List<EventDTO>>(eventEntities);
+                    return eventDtos;
+                }
+                throw new Exception("No events found fot this month");
+               
+            }
+            catch (Exception ex)
+            {
+                await Console.Out.WriteLineAsync(ex.Message + " Error in event service");
+                return null;
+            }
         }
 
 
@@ -94,11 +125,16 @@ namespace LibraryProjectService
             try
             {
                 bool isDeleted = await _eventRepository.DeleteEvent(id);
-
-                return isDeleted;
+                if (isDeleted)
+                {
+                    return isDeleted;
+                }
+                throw new Exception("Event not found"); 
+                
             }
             catch (Exception ex)
             {
+                await Console.Out.WriteLineAsync(ex.Message + "Error in event Service");
                 return false;
             }
         }

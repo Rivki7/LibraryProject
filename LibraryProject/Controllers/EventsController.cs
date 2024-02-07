@@ -5,7 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LibraryProject.Controllers
 {
-    public class EventsController : Controller
+    [Route("api/[controller]")]
+    [ApiController]
+    public class EventsController : ControllerBase
     {
 
         private IEventService _eventService;

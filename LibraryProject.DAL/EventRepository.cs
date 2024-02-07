@@ -20,11 +20,16 @@ namespace LibraryProjectRepository
         {
             try
             {
-                return await _libraryContext.Events.ToListAsync();
-
+                List<Event> events = await _libraryContext.Events.ToListAsync();
+                   if (events!=null && events.Any())
+                {
+                    return events;
+                }
+              throw new Exception("No events found!");
             }
             catch (Exception ex)
             {
+                await Console.Out.WriteLineAsync(ex.Message+ "Error in event Repository");
                 return null;
             }
         }
@@ -38,10 +43,11 @@ namespace LibraryProjectRepository
                 {
                     return e;
                 }
-                return null;
+                throw new Exception("No event found with this id");
             }
             catch (Exception ex)
             {
+                await Console.Out.WriteLineAsync(ex.Message + "Error in event Repository");
                 return null;
             }
 
@@ -50,11 +56,17 @@ namespace LibraryProjectRepository
         {
             try
             {
-                return await _libraryContext.Events
+                List<Event> events= await _libraryContext.Events
                .Where(e => e.Date.Month == month)
                .ToListAsync();
+                if(events!=null && events.Any())
+                {
+                    return events;
+                }
+                throw new Exception("No event found for this month"); 
             }catch (Exception ex)
             {
+                await Console.Out.WriteLineAsync(ex.Message + "Error in event Repository");
                 return null; 
             }
            
@@ -101,25 +113,38 @@ namespace LibraryProjectRepository
                     existingEvent.Desc = updatedEvent.Desc;
                     _libraryContext.Update(existingEvent);
                     await _libraryContext.SaveChangesAsync();
-                  }
-                return existingEvent;
+                    return await _libraryContext.Events.FindAsync(updatedEvent.Id);
+                }
+                throw new Exception("Event not found"); 
+              
             }
             catch (Exception ex) {
+                await Console.Out.WriteLineAsync(ex.Message + "Error in event Repository");
                 return null; 
             }
           }
 
         public async Task<bool> DeleteEvent(int id)
         {
-            var eventToDelete =await _libraryContext.Events.FindAsync(id);
-
-            if (eventToDelete != null)
+            try
             {
-                _libraryContext.Events.Remove(eventToDelete);
-               await _libraryContext.SaveChangesAsync();
-                return true;
+                var eventToDelete = await _libraryContext.Events.FindAsync(id);
+
+                if (eventToDelete != null)
+                {
+                    _libraryContext.Events.Remove(eventToDelete);
+                    await _libraryContext.SaveChangesAsync();
+                    return true;
+                }
+               throw new Exception("Event not found");
+
             }
-            return false;
+            catch(Exception ex) 
+            {
+                await Console.Out.WriteLineAsync(ex.Message + "Error in event Repository");
+                return false;
+            }
+            
         }
 
     }

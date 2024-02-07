@@ -1,4 +1,5 @@
 ﻿using LibraryProject.DAL.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,71 +8,216 @@ using System.Threading.Tasks;
 
 namespace LibraryProjectRepository
 {
-    internal class TitleRepository
+    public class TitleRepository : ITitleRepository
     {
 
-        private readonly LibraryContext _libraryContext= new LibraryContext();
-              
-
-        public IEnumerable<Title> GetAllTitles()
+        private readonly LibraryContext _libraryContext;
+        public TitleRepository(LibraryContext libraryContext)
         {
-            return _libraryContext.Titles.ToList();
+            _libraryContext = libraryContext;
         }
 
-        public Title GetTitleById(int id)
+        public async Task<List<Title>> GetAllTitles()
         {
-            return _libraryContext.Titles.FirstOrDefault(t => t.Id == id);
-        }
-
-        public IEnumerable<Title> GetTitlesByCategory(string categoryName)
-        {
-            return _libraryContext.Titles
-                .Where(t => t.CategoryToTitles.Any(ct => ct.Category.Name == categoryName))
-                .ToList();
-        }
-
-        public IEnumerable<Title> GetTitlesByCategories(IEnumerable<string> categoryNames)
-        {
-            return _libraryContext.Titles
-                .Where(t => t.CategoryToTitles.Any(ct => categoryNames.Contains(ct.Category.Name)))
-                .ToList();
-        }
-
-        public IEnumerable<Title> GetTitlesByAuthor(string author)
-        {
-            return _libraryContext.Titles.Where(t => t.Author == author).ToList();
-        }
-        public IEnumerable<Title> GetTitlesEnteredWithinLast60Days()
-        {
-            DateTime sixtyDaysAgo = DateTime.Now.AddDays(-60);
-
-            return _libraryContext.Titles
-                .Where(t => t.Books.Any(b => b.DateEnter >= sixtyDaysAgo))
-                .OrderByDescending(t => t.DateEnter)
-                .ToList();
-        }
-        public void AddTitle(Title title)
-        {
-            _libraryContext.Titles.Add(title);
-            _libraryContext.SaveChanges();
-        }
-
-        public void UpdateTitle(int titleId, string newName, string newAuthor, string newDesc)
-        {
-            var titleToUpdate = _libraryContext.Titles.Find(titleId);
-
-            if (titleToUpdate != null)
+            try
             {
-                titleToUpdate.Name = newName;
-                titleToUpdate.Author = newAuthor;
-                titleToUpdate.Desc = newDesc;
-
-                _libraryContext.SaveChanges();
+                List<Title> titles = await _libraryContext.Titles.ToListAsync();
+                if (titles != null && titles.Any())
+                {
+                    return titles;
+                }
+                throw new Exception("No titles found");
             }
-            // Handle the case where the title with the given ID is not found.
+            catch (Exception ex)
+            {
+
+                await Console.Out.WriteLineAsync(ex.Message + "Error in Title Repository. Func name: GetAllTitles");
+                return null;
+            }
         }
 
-        // Add other methods for updating, deleting, or querying Titles
+        public async Task<Title> GetTitleById(int id)
+        {
+            try
+            {
+                Title title = await _libraryContext.Titles.FindAsync(id);
+                if (title != null)
+                {
+                    return title;
+                }
+                throw new Exception($"No title found with the id of {id}");
+
+            }
+            catch (Exception ex)
+            {
+                await Console.Out.WriteLineAsync(ex.Message + "Error in Title Repository. Func name: GetTitleById");
+                return null;
+            }
+        }
+
+        public async Task<List<Title>> GetTitlesByCategory(string categoryName)
+        {
+            try
+            {
+                List<Title> titles = await _libraryContext.Titles
+                .Where(t => t.CategoryToTitles.Any(ct => ct.Category.Name == categoryName))
+                .ToListAsync();
+                if (titles != null && titles.Any())
+                {
+                    return titles;
+                }
+                throw new Exception($"No titles found for the category {categoryName}");
+            }
+            catch (Exception ex)
+            {
+                await Console.Out.WriteLineAsync(ex.Message + "Error in Title Repository. Func name: GetTitlesByCategory");
+                return null;
+            }
+
+        }
+
+        public async Task<List<Title>> GetTitlesByCategories(List<string> categoryNames)
+        {
+            try
+            {
+                List<Title> titles = await _libraryContext.Titles
+                    .Where(t => t.CategoryToTitles.Any(ct => categoryNames.Contains(ct.Category.Name)))
+                    .ToListAsync();
+                if (titles != null && titles.Any()) { return titles; }
+                throw new Exception("No titles found for these categories");
+            }
+            catch (Exception ex)
+            {
+                await Console.Out.WriteLineAsync(ex.Message + "Error in Title Repository. Func name: GetTitlesByCategories");
+                return null;
+            }
+
+        }
+
+        public async Task<List<Title>> GetTitlesByAuthor(string author)
+        {
+            try
+            {
+                List<Title> titles = await _libraryContext.Titles.Where(t => t.Author == author).ToListAsync();
+                if (titles != null && titles.Any())
+                {
+                    return titles;
+                }
+                throw new Exception("No titles found for this author");
+            }
+            catch (Exception ex)
+            {
+                await Console.Out.WriteLineAsync(ex.Message + "Error in Title Repository. Func name: GetTitlesByAuthor");
+                return null;
+            }
+
+
+        }
+        public async Task<List<Title>> GetTitlesEnteredWithinLast60Days()
+        {
+            try
+            {
+                DateTime sixtyDaysAgo = DateTime.Now.AddDays(-60);
+                List<Title> titles = await _libraryContext.Titles
+                    .Where(t => t.Books.Any(b => b.DateEnter >= sixtyDaysAgo))
+                    .OrderByDescending(t => t.DateEnter)
+                    .ToListAsync();
+                if (titles != null && titles.Any())
+                {
+                    return titles;
+                }
+                throw new Exception("No titles found");
+            }
+            catch (Exception ex)
+            {
+                await Console.Out.WriteLineAsync(ex.Message + "Error in Title Repository. Func name: GetTitlesEnteredWithinLast60Days");
+                return null;
+            }
+
+        }
+        public async Task<Title> AddTitle(Title title)
+        {
+
+            using (var transaction = await _libraryContext.Database.BeginTransactionAsync())
+            {
+                try
+                {
+                    await _libraryContext.Titles.AddAsync(title);
+                    await _libraryContext.SaveChangesAsync();
+
+                    var lastAddedTitle = await _libraryContext.Titles
+                        .OrderByDescending(e => e.Id)
+                        .FirstOrDefaultAsync();
+
+                    await transaction.CommitAsync();
+
+                    return lastAddedTitle;
+                }
+                catch (Exception ex)
+                {
+                    await transaction.RollbackAsync();
+                    throw new Exception("Failed to add event.", ex);
+                    return null;
+                }
+            }
+        }
+
+        // Inside the class implementing ITitleRepository
+        public async Task<Title> UpdateTitle(Title updatedTitle)
+        {
+            try
+            {
+                var titleToUpdate = await _libraryContext.Titles.FindAsync(updatedTitle.Id);
+
+                if (titleToUpdate != null)
+                {
+                    // Update properties based on the provided Title object
+                    titleToUpdate.Name = updatedTitle.Name;
+                    titleToUpdate.Author = updatedTitle.Author;
+                    titleToUpdate.Desc = updatedTitle.Desc;
+
+                    await _libraryContext.SaveChangesAsync();
+
+                    // Return the updated title
+                    return titleToUpdate;
+                }
+
+                return null;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error updating title: {ex.Message}");
+                return null;
+            }
+        }
+
+
+        public async Task<bool> DeleteTitle(int id)
+        {
+            try
+            {
+                var titleToDelete = await _libraryContext.Titles.FindAsync(id);
+
+                if (titleToDelete != null)
+                {
+                    _libraryContext.Titles.Remove(titleToDelete);
+                    await _libraryContext.SaveChangesAsync();
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                await Console.Out.WriteLineAsync(ex.Message + "Error in Delete Title Repository");
+                return false;
+            }
+
+        }
+
     }
 
 }
