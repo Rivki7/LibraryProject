@@ -22,6 +22,15 @@ builder.Services.AddScoped<ITitleRepository, TitleRepository>();
 builder.Services.AddScoped<ITitleService, TitleService>();
 builder.Services.AddScoped<IBooksArchiveRepository, BooksArchiveRepository>();
 builder.Services.AddScoped<IBooksArchiveService, BooksArchiveService>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<ICategoryToTitleRepository, CategoryToTitleRepository>();
+builder.Services.AddScoped<ICategoryToTitleService, CategoryToTitleService>();
+builder.Services.AddScoped<ICheckedBookRepository, CheckedBookRepository>();
+builder.Services.AddScoped<ICheckedBookService, CheckedBookService>();
+
+
+
 
 
 
