@@ -28,6 +28,8 @@ builder.Services.AddScoped<ICategoryToTitleRepository, CategoryToTitleRepository
 builder.Services.AddScoped<ICategoryToTitleService, CategoryToTitleService>();
 builder.Services.AddScoped<ICheckedBookRepository, CheckedBookRepository>();
 builder.Services.AddScoped<ICheckedBookService, CheckedBookService>();
+builder.Services.AddScoped<ILibrarianRepository, LibrarianRepository>();
+builder.Services.AddScoped<ILibrarianService, LibrarianService>();
 
 
 
