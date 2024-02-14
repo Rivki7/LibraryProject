@@ -8,6 +8,6 @@ namespace LibraryProjectService
         Task<bool> DeleteLibrarian(int librarianId);
         Task<List<LibrariansDTO>> GetAllLibrarians();
         Task<LibrariansDTO> GetLibrarianById(int librarianId);
-        Task<bool> UpdateLibrarian(LibrariansDTO updatedLibrarianDTO);
+        Task<LibrariansDTO> UpdateLibrarian(LibrariansDTO updatedLibrarianDto);
     }
 }

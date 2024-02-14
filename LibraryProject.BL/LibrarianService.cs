@@ -80,19 +80,24 @@ namespace LibraryProjectService
             }
         }
 
-        public async Task<bool> UpdateLibrarian(LibrariansDTO updatedLibrarianDTO)
+        public async Task<LibrariansDTO> UpdateLibrarian(LibrariansDTO updatedLibrarianDto)
         {
             try
             {
-                var updatedLibrarian = _mapper.Map<Librarian>(updatedLibrarianDTO);
-                return await _librarianRepository.UpdateLibrarian(updatedLibrarian);
+                Librarian updatedLibrarian = _mapper.Map<Librarian>(updatedLibrarianDto);
+
+                Librarian updatedEntity = await _librarianRepository.UpdateLibrarian(updatedLibrarian);
+
+                return _mapper.Map<LibrariansDTO>(updatedEntity);
             }
             catch (Exception ex)
             {
-
-                Console.WriteLine($"Error occurred while updating librarian: {ex.Message}");
-                return false;
+                Console.WriteLine($"Error occurred while updating librarian by ID from UpdateLibrarian in service layer: {ex.Message}");
+                return null;
             }
         }
+
+
+
     }
 }

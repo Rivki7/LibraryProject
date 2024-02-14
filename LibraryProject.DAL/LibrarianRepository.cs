@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace LibraryProjectRepository
 {
-    public class LibrarianRepository : ILibrarianRepository
+    public class LibrarianRepository :ILibrarianRepository
     {
 
         private readonly LibraryContext _libraryContext;
@@ -62,19 +62,43 @@ namespace LibraryProjectRepository
             }
         }
 
-        public async Task<bool> UpdateLibrarian(Librarian updatedLibrarian)
+        public async Task<Librarian> UpdateLibrarian(Librarian updatedLibrarian)
         {
-            try
+            using (var transaction = _libraryContext.Database.BeginTransaction())
             {
-                _libraryContext.Entry(updatedLibrarian).State = EntityState.Modified;
-                await _libraryContext.SaveChangesAsync();
-                return true;
-            }
-            catch (Exception ex)
-            {
+                try
+                {
+                    var existingLibrarian = await _libraryContext.Librarians.FindAsync(updatedLibrarian.Id);
+                    if (existingLibrarian == null)
+                    {
+                        throw new ArgumentException($"Librarian with ID {updatedLibrarian.Id} not found.");
+                    }
 
-                Console.WriteLine($"Error in LibrarianRepository UpdateLibrarianAsync function: {ex.Message}");
-                return false;
+                    _libraryContext.Entry(existingLibrarian).State = EntityState.Modified;
+
+                    existingLibrarian.FirstName = updatedLibrarian.FirstName;
+                    existingLibrarian.LastName = updatedLibrarian.LastName;
+                    existingLibrarian.PhoneNumber1 = updatedLibrarian.PhoneNumber1;
+                    existingLibrarian.PhoneNumber2 = updatedLibrarian.PhoneNumber2;
+                    existingLibrarian.Email = updatedLibrarian.Email;
+                    existingLibrarian.BirthDate = updatedLibrarian.BirthDate;
+                    existingLibrarian.Address = updatedLibrarian.Address;
+                    existingLibrarian.City = updatedLibrarian.City;
+                    existingLibrarian.IsBlocked = updatedLibrarian.IsBlocked;
+
+
+                    await _libraryContext.SaveChangesAsync();
+
+                    transaction.Commit();
+
+                    return existingLibrarian;
+                }
+                catch (Exception ex)
+                {
+                    // Rollback transaction on error
+                    transaction.Rollback();
+                    throw; // Re-throw the exception for further handling
+                }
             }
         }
 

@@ -72,18 +72,26 @@ namespace LibraryProject.Controllers
                 return StatusCode(500, "Internal server error");
             }
         }
-
+      
         [HttpPut("{librarianId}")]
-        public async Task<ActionResult> UpdateLibrarian(int librarianId, LibrariansDTO updatedLibrarianDTO)
+        public async Task<ActionResult<LibrariansDTO>> UpdateLibrarian(int librarianId, LibrariansDTO updatedLibrarianDTO)
         {
             try
             {
-                var result = await _librarianService.UpdateLibrarian(updatedLibrarianDTO);
-                if (!result)
+                if (librarianId != updatedLibrarianDTO.Id)
+                {
+                    return BadRequest("Librarian ID in the URL and DTO must match.");
+                }
+
+                LibrariansDTO updatedLibrarian = await _librarianService.UpdateLibrarian(updatedLibrarianDTO);
+
+                if (updatedLibrarian == null)
                 {
                     return NotFound();
                 }
-                return NoContent();
+
+                
+                return Ok(updatedLibrarian);
             }
             catch (Exception ex)
             {
