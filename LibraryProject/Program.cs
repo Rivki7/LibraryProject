@@ -30,10 +30,10 @@ builder.Services.AddScoped<ICheckedBookRepository, CheckedBookRepository>();
 builder.Services.AddScoped<ICheckedBookService, CheckedBookService>();
 builder.Services.AddScoped<ILibrarianRepository, LibrarianRepository>();
 builder.Services.AddScoped<ILibrarianService, LibrarianService>();
-
-
-
-
+builder.Services.AddScoped<IMessageRepository, MessageRepository>();
+builder.Services.AddScoped<IMessageService, MessageService>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 
 builder.Services.AddDbContext<LibraryContext>(options =>
