@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace LibraryProjectRepository
 {
-    public class BookRepository
+    public class BookRepository : IBookRepository
     {
 
         private readonly LibraryContext _libraryContext;
@@ -22,17 +22,17 @@ namespace LibraryProjectRepository
         {
             try
             {
-                List < Book > books = await _libraryContext.Books.ToListAsync();
-                if(books!=null && books.Any() )
+                List<Book> books = await _libraryContext.Books.ToListAsync();
+                if (books != null && books.Any())
                 {
                     return books;
                 }
-                throw new Exception("No books found!"); 
+                throw new Exception("No books found!");
             }
             catch (Exception ex)
             {
                 await Console.Out.WriteLineAsync(ex.Message + "Error in OpenHour Repository");
-                return null; 
+                return null;
             }
         }
 
@@ -41,12 +41,12 @@ namespace LibraryProjectRepository
         {
             try
             {
-                Book book= await _libraryContext.Books.FirstOrDefaultAsync(b => b.Id == id);
+                Book book = await _libraryContext.Books.FirstOrDefaultAsync(b => b.Id == id);
                 if (book != null)
                 {
                     return book;
                 }
-                throw new Exception("Book not found"); 
+                throw new Exception("Book not found");
             }
             catch (Exception ex)
             {
@@ -63,17 +63,17 @@ namespace LibraryProjectRepository
                 var books = await _libraryContext.Books
                     .Where(b => b.Title.Name == name)
                     .ToListAsync();
-                if(books!=null && books.Any())
+                if (books != null && books.Any())
                 {
                     return books;
                 }
-               throw new   Exception("No book with this name was found");
+                throw new Exception("No book with this name was found");
             }
             catch (Exception ex)
             {
                 await Console.Out.WriteLineAsync(ex.Message + "Error in Book Repository");
 
-                return null ;
+                return null;
             }
         }
 
@@ -88,7 +88,7 @@ namespace LibraryProjectRepository
 
                     await _libraryContext.SaveChangesAsync();
 
-                     _libraryContext.Entry(book).State = EntityState.Detached;
+                    _libraryContext.Entry(book).State = EntityState.Detached;
 
                     var newlyAddedBook = await _libraryContext.Books
                         .SingleOrDefaultAsync(b => b.Id == book.Id);
@@ -99,10 +99,10 @@ namespace LibraryProjectRepository
                 }
                 catch (Exception ex)
                 {
-                   
+
                     await transaction.RollbackAsync();
 
-                    return null; 
+                    return null;
                 }
             }
         }
@@ -124,14 +124,14 @@ namespace LibraryProjectRepository
                     return await _libraryContext.Books.FindAsync(updatedBook.Id);
                 }
                 throw new Exception("Book not found!");
-                
-                
+
+
             }
             catch (Exception ex)
             {
                 await Console.Out.WriteLineAsync(ex.Message + "Error in Book Repository");
 
-                return null; 
+                return null;
             }
         }
 
@@ -149,7 +149,7 @@ namespace LibraryProjectRepository
                     return true;
                 }
 
-                throw new Exception("Book not found"); 
+                throw new Exception("Book not found");
             }
             catch (Exception ex)
             {
