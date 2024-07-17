@@ -51,7 +51,7 @@ namespace LibraryProject.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<UserDTO>> AddUser(UserDTO userDTO)
+        public async Task<ActionResult<UserDTO>> AddUser(CreateUserDTO userDTO)
         {
             try
             {

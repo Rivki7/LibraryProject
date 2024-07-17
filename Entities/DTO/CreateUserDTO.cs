@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace Entities.DTO
 {
-    public class UserDTO
+    public class CreateUserDTO
     {
-        public int Id { get; set; }
 
         public string FirstName { get; set; } = null!;
 
@@ -26,8 +25,7 @@ namespace Entities.DTO
 
         public string City { get; set; } = null!;
 
-        public DateTime SignDate { get; set; }
+        public string Password { get; set; } = null!;
 
-        public bool IsBlocked { get; set; }
     }
 }

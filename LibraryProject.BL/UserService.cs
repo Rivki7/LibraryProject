@@ -49,17 +49,20 @@ namespace LibraryProjectService
             }
         }
 
-        public async Task<UserDTO> AddUser(UserDTO userDTO)
+        public async Task<UserDTO> AddUser(CreateUserDTO userDTO)
         {
             try
             {
                 var user = _mapper.Map<User>(userDTO);
+                user.SignDate = DateTime.UtcNow;
+                user.IsBlocked = false;
+
                 var addedUser = await _userRepository.AddUser(user);
                 return _mapper.Map<UserDTO>(addedUser);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error in AddUserAsync in UserService: {ex.Message}");
+                Console.WriteLine($"Error in AddUser in UserService: {ex.Message}");
                 return null;
             }
         }

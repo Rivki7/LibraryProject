@@ -9,5 +9,7 @@ namespace LibraryProjectRepository
         Task<List<User>> GetAllUsers();
         Task<User> GetUserById(int userId);
         Task<User> UpdateUser(User user);
+
+      
     }
 }
