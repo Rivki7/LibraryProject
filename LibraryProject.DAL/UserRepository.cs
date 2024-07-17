@@ -92,5 +92,19 @@ namespace LibraryProjectRepository
                 return false;
             }
         }
+
+        public async Task<User> GetUserByEmail(string email)
+        {
+            try
+            {
+                return await _libraryContext.Users.FirstOrDefaultAsync(u => u.Email == email); 
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in GetUserByEmail in UserRepository: {ex.Message}");
+                return null;
+            }
+        }
     }
 }

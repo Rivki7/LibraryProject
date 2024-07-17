@@ -50,7 +50,7 @@ namespace LibraryProject.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpPost("addUser")]
         public async Task<ActionResult<UserDTO>> AddUser(CreateUserDTO userDTO)
         {
             try
@@ -67,6 +67,23 @@ namespace LibraryProject.Controllers
             }
         }
 
+        [HttpPost("login")]
+        public async Task<ActionResult> Login([FromBody] UserLoginDTO userLoginDTO)
+        {
+            if(string.IsNullOrEmpty(userLoginDTO.Email) || string.IsNullOrEmpty(userLoginDTO.Password))
+            {
+                return BadRequest("Email and password are required.");
+            }
+
+            var userDTO = await _userService.Login(userLoginDTO.Email, userLoginDTO.Password);
+            if(userDTO == null)
+            {
+                return Unauthorized();
+            }
+
+            return Ok(userDTO);
+        }
+        
         [HttpPut("{id}")]
         public async Task<ActionResult<UserDTO>> UpdateUser(int id, UserDTO userDTO)
         {

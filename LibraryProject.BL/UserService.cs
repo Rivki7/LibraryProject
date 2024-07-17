@@ -94,5 +94,29 @@ namespace LibraryProjectService
                 return false;
             }
         }
+
+        public async Task<UserDTO> Login(string email, string password)
+        {
+            try
+            {
+               var user = await _userRepository.GetUserByEmail(email); 
+                if(user == null)
+                {
+                    return null; 
+                }
+
+                if(password == user.Password)
+                {
+                    return _mapper.Map<UserDTO>(user); 
+                }
+
+                return null; 
+            }catch (Exception ex)
+            {
+                Console.WriteLine($"Error in Login in UserService: {ex.Message}");
+                return null;
+            }
+        }
+        }
     }
-}
+
