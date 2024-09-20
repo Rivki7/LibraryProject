@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Entities.DTO;
-using LibraryProject.DAL.Models;
 using LibraryProjectRepository;
+using LibraryProjectRepository.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

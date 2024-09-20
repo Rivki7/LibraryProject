@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
-namespace LibraryProject.DAL.Models;
+namespace LibraryProjectRepository.Models;
 
 public partial class LibraryContext : DbContext
 {
@@ -27,8 +27,6 @@ public partial class LibraryContext : DbContext
 
     public virtual DbSet<Event> Events { get; set; }
 
-    public virtual DbSet<Librarian> Librarians { get; set; }
-
     public virtual DbSet<Message> Messages { get; set; }
 
     public virtual DbSet<OpeningHour> OpeningHours { get; set; }
@@ -37,9 +35,11 @@ public partial class LibraryContext : DbContext
 
     public virtual DbSet<User> Users { get; set; }
 
+    public virtual DbSet<UsersLevel> UsersLevels { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=LAPTOP-91NE6I1B;Database=Library;Trusted_Connection=True; TrustServerCertificate=true");
+        => optionsBuilder.UseSqlServer("Server=LAPTOP-91NE6I1B;Database=Library;Trusted_Connection=True;TrustServerCertificate=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -157,38 +157,6 @@ public partial class LibraryContext : DbContext
                 .HasColumnName("NAME");
         });
 
-        modelBuilder.Entity<Librarian>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__Libraria__3214EC2714D8EDD7");
-
-            entity.Property(e => e.Id).HasColumnName("ID");
-            entity.Property(e => e.Address)
-                .HasMaxLength(200)
-                .HasColumnName("ADDRESS");
-            entity.Property(e => e.BirthDate)
-                .HasColumnType("date")
-                .HasColumnName("BIRTH_DATE");
-            entity.Property(e => e.City)
-                .HasMaxLength(100)
-                .HasColumnName("CITY");
-            entity.Property(e => e.Email)
-                .HasMaxLength(100)
-                .HasColumnName("EMAIL");
-            entity.Property(e => e.FirstName)
-                .HasMaxLength(100)
-                .HasColumnName("FIRST_NAME");
-            entity.Property(e => e.IsBlocked).HasColumnName("IS_BLOCKED");
-            entity.Property(e => e.LastName)
-                .HasMaxLength(100)
-                .HasColumnName("LAST_NAME");
-            entity.Property(e => e.PhoneNumber1)
-                .HasMaxLength(20)
-                .HasColumnName("PHONE_NUMBER_1");
-            entity.Property(e => e.PhoneNumber2)
-                .HasMaxLength(20)
-                .HasColumnName("PHONE_NUMBER_2");
-        });
-
         modelBuilder.Entity<Message>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__Messages__3214EC2774E1EF1D");
@@ -216,13 +184,21 @@ public partial class LibraryContext : DbContext
             entity.ToTable("Opening_Hours");
 
             entity.Property(e => e.Id).HasColumnName("ID");
-            entity.Property(e => e.ClosingHour1).HasColumnName("CLOSING_HOUR1");
-            entity.Property(e => e.ClosingHour2).HasColumnName("CLOSING_HOUR2");
+            entity.Property(e => e.ClosingHour1)
+                .HasMaxLength(6)
+                .HasColumnName("CLOSING_HOUR1");
+            entity.Property(e => e.ClosingHour2)
+                .HasMaxLength(6)
+                .HasColumnName("CLOSING_HOUR2");
             entity.Property(e => e.Day)
-                .HasColumnType("date")
+                .HasMaxLength(7)
                 .HasColumnName("DAY");
-            entity.Property(e => e.OpeningHour1).HasColumnName("OPENING_HOUR1");
-            entity.Property(e => e.OpeningHour2).HasColumnName("OPENING_HOUR2");
+            entity.Property(e => e.OpeningHour1)
+                .HasMaxLength(6)
+                .HasColumnName("OPENING_HOUR1");
+            entity.Property(e => e.OpeningHour2)
+                .HasMaxLength(6)
+                .HasColumnName("OPENING_HOUR2");
         });
 
         modelBuilder.Entity<Title>(entity =>
@@ -274,6 +250,7 @@ public partial class LibraryContext : DbContext
             entity.Property(e => e.LastName)
                 .HasMaxLength(100)
                 .HasColumnName("LAST_NAME");
+            entity.Property(e => e.LevelId).HasColumnName("LEVEL_ID");
             entity.Property(e => e.Password)
                 .HasMaxLength(100)
                 .HasColumnName("PASSWORD");
@@ -286,6 +263,23 @@ public partial class LibraryContext : DbContext
             entity.Property(e => e.SignDate)
                 .HasColumnType("date")
                 .HasColumnName("SIGN_DATE");
+
+            entity.HasOne(d => d.Level).WithMany(p => p.Users)
+                .HasForeignKey(d => d.LevelId)
+                .HasConstraintName("FK_Users_Users_Level");
+        });
+
+        modelBuilder.Entity<UsersLevel>(entity =>
+        {
+            entity.HasKey(e => e.LevelId);
+
+            entity.ToTable("Users_Level");
+
+            entity.Property(e => e.LevelId).HasColumnName("LEVEL_ID");
+            entity.Property(e => e.LevelDesc)
+                .HasMaxLength(10)
+                .IsFixedLength()
+                .HasColumnName("LEVEL_DESC");
         });
 
         OnModelCreatingPartial(modelBuilder);

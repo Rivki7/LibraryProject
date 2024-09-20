@@ -1,5 +1,4 @@
 ﻿using Entities.DTO;
-using LibraryProject.DAL.Models;
 
 namespace LibraryProjectService
 {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace LibraryProject.DAL.Models;
+namespace LibraryProjectRepository.Models;
 
 public partial class CheckedBook
 {

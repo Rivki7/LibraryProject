@@ -1,0 +1,1 @@
+Scaffold-DbContext -Connection "Server=LAPTOP-91NE6I1B;Database=Library;Trusted_Connection=True;TrustServerCertificate=True;" -Provider Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models -Force

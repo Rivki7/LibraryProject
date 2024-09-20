@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Entities.DTO;
-using LibraryProject.DAL.Models;
+using LibraryProjectRepository.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,8 +26,7 @@ namespace Entities
             CreateMap<CheckedBookDTO, CheckedBook>();
             CreateMap<Event, EventDTO>();
             CreateMap<EventDTO, Event>();
-            CreateMap<Librarian, LibrariansDTO>();
-            CreateMap<LibrariansDTO, Librarian>();
+           
             CreateMap<Message, MessageDTO>();
             CreateMap<MessageDTO, Message>();
             CreateMap<OpeningHour, OpeningHourDTO>();
@@ -37,8 +36,8 @@ namespace Entities
             CreateMap<User, UserDTO>();
             CreateMap<UserDTO, User>();
             CreateMap<CreateUserDTO, User>();
-
-
+            CreateMap<UsersLevelDTO, UsersLevel>();
+            CreateMap< UsersLevel, UsersLevelDTO>();
         }
     }
 }

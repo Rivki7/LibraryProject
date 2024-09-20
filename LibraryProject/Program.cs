@@ -1,7 +1,7 @@
 using AutoMapper;
 using Entities;
-using LibraryProject.DAL.Models;
 using LibraryProjectRepository;
+using LibraryProjectRepository.Models;
 using LibraryProjectService;
 using Microsoft.EntityFrameworkCore;
 
@@ -31,8 +31,6 @@ builder.Services.AddScoped<ICategoryToTitleRepository, CategoryToTitleRepository
 builder.Services.AddScoped<ICategoryToTitleService, CategoryToTitleService>();
 builder.Services.AddScoped<ICheckedBookRepository, CheckedBookRepository>();
 builder.Services.AddScoped<ICheckedBookService, CheckedBookService>();
-builder.Services.AddScoped<ILibrarianRepository, LibrarianRepository>();
-builder.Services.AddScoped<ILibrarianService, LibrarianService>();
 builder.Services.AddScoped<IMessageRepository, MessageRepository>();
 builder.Services.AddScoped<IMessageService, MessageService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();

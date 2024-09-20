@@ -78,7 +78,7 @@ namespace LibraryProject.Controllers
             var userDTO = await _userService.Login(userLoginDTO.Email, userLoginDTO.Password);
             if(userDTO == null)
             {
-                return Unauthorized();
+                return NoContent();
             }
 
             return Ok(userDTO);

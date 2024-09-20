@@ -17,8 +17,7 @@ namespace LibraryProject.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllBooksAsync
-            ()
+        public async Task<IActionResult> GetAllBooksAsync()
         {
             try
             {

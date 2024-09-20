@@ -29,5 +29,7 @@ namespace Entities.DTO
         public DateTime SignDate { get; set; }
 
         public bool IsBlocked { get; set; }
+
+        public int? LevelId { get; set; }
     }
 }

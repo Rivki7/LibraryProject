@@ -1,4 +1,5 @@
-﻿using LibraryProject.DAL.Models;
+﻿
+using LibraryProjectRepository.Models;
 
 namespace LibraryProjectRepository
 {

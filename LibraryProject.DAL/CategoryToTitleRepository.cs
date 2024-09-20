@@ -1,4 +1,4 @@
-﻿using LibraryProject.DAL.Models;
+﻿using LibraryProjectRepository.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
